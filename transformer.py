@@ -53,6 +53,7 @@ class Attention(nn.Module):
     def forward(self, query, key, value, mask=None):
         scores = torch.matmul(query, key.transpose(-2, -1)) / math.sqrt(query.size(-1))
         if mask is not None:
+            scores = scores.float()
             scores = scores.masked_fill(mask == 0, -1e9)
         p_attn = F.softmax(scores, dim=-1)
         p_attn = self.dropout(p_attn)
